@@ -1,5 +1,7 @@
 package com.skillbox.cryptobot.bot.command;
 
+import com.skillbox.cryptobot.bot.entity.Subscriber;
+import com.skillbox.cryptobot.bot.service.SubscriberService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Slf4j
 public class StartCommand implements IBotCommand {
 
+    private final SubscriberService subscriberService;
+
     @Override
     public String getCommandIdentifier() {
         return "start";
@@ -32,6 +36,10 @@ public class StartCommand implements IBotCommand {
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
         SendMessage answer = new SendMessage();
         answer.setChatId(message.getChatId());
+        log.info("user with id: {} send /start command", message.getFrom().getId());
+        Subscriber subscriber = new Subscriber();
+        subscriber.setTgId(message.getFrom().getId());
+        subscriberService.saveSubscriber(subscriber);
 
         answer.setText("""
                 Привет! Данный бот помогает отслеживать стоимость биткоина.
