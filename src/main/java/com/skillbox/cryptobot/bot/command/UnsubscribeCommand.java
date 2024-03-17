@@ -37,6 +37,10 @@ public class UnsubscribeCommand implements IBotCommand {
         log.info("user with id: {} send /unsubscribe command", message.getFrom().getId());
 
         Subscriber subscriber = subscriberService.getSubscriber(message.getFrom().getId());
+        if (subscriber.getPrice() == null) {
+            sendMessage(absSender, message, "Активные подписки отсутствуют");
+            return;
+        }
         subscriber.setPrice(null);
         subscriberService.updateSubscriber(subscriber);
         sendMessage(absSender, message, "Подписка отменена");
@@ -49,7 +53,7 @@ public class UnsubscribeCommand implements IBotCommand {
             answer.setText(reply);
             absSender.execute(answer);
         } catch (TelegramApiException e) {
-            log.error("Error occurred in /subscribe command", e);
+            log.error("Error occurred in /unsubscribe command", e);
         }
     }
 }

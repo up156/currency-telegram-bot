@@ -28,7 +28,7 @@ public class SubscriberService {
 
     }
 
-    private boolean checkIfExists(Long id) {
+    public boolean checkIfExists(Long id) {
         return subscriberRepository.existsByTgId(id);
     }
 
