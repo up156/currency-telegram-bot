@@ -54,7 +54,7 @@ public class SubscribeCommand implements IBotCommand {
         subscriberService.updateSubscriber(subscriber);
         sendCurrentBtcPrice(absSender, message);
 
-        sendMessage(absSender, message, "Установлена цена:" + price);
+        sendMessage(absSender, message, "Новая подписка установлена на цену: " + price + " USD");
     }
 
     private Long getValue(Message message) {
@@ -69,7 +69,7 @@ public class SubscribeCommand implements IBotCommand {
 
     private void sendCurrentBtcPrice(AbsSender absSender, Message message) {
         try {
-            sendMessage(absSender, message, "Текущая цена биткойна:" + binanceClient.getBitcoinPrice());
+            sendMessage(absSender, message, "Текущая цена биткойна: " + binanceClient.getBitcoinPrice());
         } catch (IOException e) {
             log.info("Error occurred in /subscribe command");
         }
