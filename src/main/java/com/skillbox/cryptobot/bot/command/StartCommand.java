@@ -1,6 +1,4 @@
 package com.skillbox.cryptobot.bot.command;
-
-import com.skillbox.cryptobot.bot.entity.Subscriber;
 import com.skillbox.cryptobot.bot.service.SubscriberService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,14 +35,13 @@ public class StartCommand implements IBotCommand {
         SendMessage answer = new SendMessage();
         answer.setChatId(message.getChatId());
         log.info("user with id: {} send /start command", message.getFrom().getId());
-        Subscriber subscriber = new Subscriber();
-        subscriber.setTgId(message.getFrom().getId());
-        subscriberService.saveSubscriber(subscriber);
+        subscriberService.saveSubscriber(message.getFrom().getId());
 
         answer.setText("""
                 Привет! Данный бот помогает отслеживать стоимость биткоина.
                 Поддерживаемые команды:
                  /get_price - получить стоимость биткоина
+                 /subscribe {укажите курс} - подписаться на курс биткоина
                 """);
         try {
             absSender.execute(answer);

@@ -13,13 +13,29 @@ public class SubscriberService {
         this.subscriberRepository = subscriberRepository;
     }
 
-    public void saveSubscriber(Subscriber subscriber) {
-        if (!checkIfExists(subscriber)) {
-            subscriberRepository.save(subscriber);
+    public Subscriber saveSubscriber(Long id) {
+        if (!checkIfExists(id)) {
+            Subscriber subscriber = new Subscriber();
+            subscriber.setTgId(id);
+            return subscriberRepository.save(subscriber);
         }
+        return getSubscriber(id);
     }
 
-    private boolean checkIfExists(Subscriber subscriber) {
-        return subscriberRepository.existsByTgId(subscriber.getTgId());
+    public Subscriber updateSubscriber(Subscriber subscriber) {
+
+        return subscriberRepository.save(subscriber);
+
+    }
+
+    private boolean checkIfExists(Long id) {
+        return subscriberRepository.existsByTgId(id);
+    }
+
+    public Subscriber getSubscriber(Long id) {
+
+        Subscriber subscriber = subscriberRepository.findSubscriberByTgId(id);
+        subscriber = subscriber == null ? saveSubscriber(id) : subscriber;
+        return subscriber;
     }
 }
