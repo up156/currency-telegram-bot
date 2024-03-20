@@ -38,7 +38,7 @@ public class GetSubscriptionCommand implements IBotCommand {
         }
 
         Subscriber subscriber = subscriberService.getSubscriber(message.getFrom().getId());
-        Long currentPrice = subscriber.getPrice();
+        Double currentPrice = subscriber.getPrice();
         if (currentPrice == null) {
             sendNoSubscriptionMessage(absSender, message);
             return;

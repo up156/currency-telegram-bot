@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -23,7 +24,10 @@ public class Subscriber {
     private Long tgId;
 
     @Builder.Default
-    private Long price = null;
+    private Double price = null;
+
+    @Builder.Default
+    private Instant lastNotified = null;
 
 
 }

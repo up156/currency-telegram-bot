@@ -3,6 +3,7 @@ package com.skillbox.cryptobot.bot.command;
 import com.skillbox.cryptobot.bot.entity.Subscriber;
 import com.skillbox.cryptobot.bot.service.SubscriberService;
 import com.skillbox.cryptobot.client.BinanceClient;
+import com.skillbox.cryptobot.utils.TextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
@@ -44,7 +45,7 @@ public class SubscribeCommand implements IBotCommand {
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
         log.info("user with id: {} send /subscribe command with price: {}", message.getFrom().getId(), message.getText());
 
-        Long price = getValue(message);
+        Double price = getValue(message);
         if (price == null) {
             sendMessage(absSender, message, "Неверное значение для команды");
             return;
@@ -57,19 +58,21 @@ public class SubscribeCommand implements IBotCommand {
         sendMessage(absSender, message, "Новая подписка установлена на цену: " + price + " USD");
     }
 
-    private Long getValue(Message message) {
-        Long value = null;
-        try {
-            value = Long.valueOf(Arrays.stream(message.getText().split(" ")).toList().get(1));
-        } catch (RuntimeException ex) {
-            log.info("input value is wrong format in /subscribe command");
+    private Double getValue(Message message) {
+        Double value;
+        String input = Arrays.stream(message.getText().split(" "))
+                .filter(s -> s.matches("[0-9]+"))
+                .findFirst().orElse("");
+        if (input.equals("")) {
+            return null;
         }
+        value = Double.valueOf(input);
         return value;
     }
 
     private void sendCurrentBtcPrice(AbsSender absSender, Message message) {
         try {
-            sendMessage(absSender, message, "Текущая цена биткойна: " + binanceClient.getBitcoinPrice());
+            sendMessage(absSender, message, "Текущая цена биткойна: " + TextUtil.toString(binanceClient.getBitcoinPrice()));
         } catch (IOException e) {
             log.info("Error occurred in /subscribe command");
         }
